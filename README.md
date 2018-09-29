@@ -1,2 +1,3 @@
-# Transition
-Electrical to Learner
+# Transition - Electrical to Learner
+
+Machine Learning with Pyhton
