@@ -1,0 +1,32 @@
+#Importing the Libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+#Importing the dataset
+dataset = pd.read_csv('/Users/NITISH/Downloads/Study/Machine Learning A-Z Template Folder/Part 2 - Regression/Section 7 - Support Vector Regression (SVR)/Position_Salaries.csv')
+x = dataset.iloc[:, 1:2].values
+y = dataset.iloc[:, [2]].values
+
+#Feature Scaling
+from sklearn.preprocessing import StandardScaler
+sc_x = StandardScaler()
+x = sc_x.fit_transform(x)
+sc_y = StandardScaler()
+y = sc_y.fit_transform(y)
+
+#Fitting SVR in the dataset
+from sklearn.svm import SVR
+regressor = SVR(kernel = 'rbf')
+regressor.fit(x,y)
+
+#Visualising the SVR results
+plt.scatter(x,y,color = 'red')
+plt.plot(x, regressor.predict(x), color = 'blue')
+plt.title('Truth or bluff(SVR)')
+plt.xlabel('Position Level')
+plt.ylabel('Salary')
+plt.show()
+
+#Predicting a new result using SVR
+y_pred = sc_y.inverse_transform(regressor.predict(sc_x.transform(np.array([[6.5]]))))
