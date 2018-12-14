@@ -1,0 +1,85 @@
+#Artificial Neural Network
+
+#Importing the Libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+#Importing the dataset
+dataset = pd.read_csv('/Users/NITISH/Downloads/Study/Machine Learning A-Z Template Folder/Part 8 - Deep Learning/Section 39 - Artificial Neural Networks (ANN)/Churn_Modelling.csv')
+x = dataset.iloc[:, 3:13].values
+y = dataset.iloc[:,13].values
+
+#Categorical values by LabelEncoder and OneHotEncoder
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+label_encoder_x1 = LabelEncoder()
+x[:,1] = label_encoder_x1.fit_transform(x[:,1])
+label_encoder_x2 = LabelEncoder()
+x[:,2] = label_encoder_x2.fit_transform(x[:,2])
+onehotencoder_x1 = OneHotEncoder(categorical_features = [1])
+x = onehotencoder_x1.fit_transform(x).toarray()
+x = x[:,1:]
+
+#Splitiing the data in training set and test set
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, random_state = 0)
+
+#Feature Scaling
+from sklearn.preprocessing import StandardScaler
+sc_x = StandardScaler()
+x_train = sc_x.fit_transform(x_train)
+x_test = sc_x.fit_transform(x_test)
+
+#Importing the Keras Library and packages
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
+
+#Initialising the ANN
+classifier = Sequential()
+
+#Creating the input layer and hidden layer
+classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu', input_dim = 11))
+
+#Creating the Second hidden layer
+classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu'))
+
+#Creating the Output Layer
+classifier.add(Dense(output_dim = 1, init = 'uniform', activation = 'sigmoid'))
+
+#Compiling the ANN
+classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+
+#Fitting the ANN to the Training Set
+classifier.fit(x_train, y_train, batch_size = 10, nb_epoch = 100)
+
+#Predicting the test set result
+y_pred = classifier.predict(x_test)
+y_pred = (y_pred > 0.5)
+
+#Creating confusion Matrix
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
